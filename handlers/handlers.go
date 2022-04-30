@@ -1,22 +1,21 @@
 package handlers
 
 import (
-	"context"
 	"edwinwalela/ordering/models"
+	r "edwinwalela/ordering/repository"
 	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v4"
 )
 
 type Handlers struct {
-	Conn *pgx.Conn
-	Ctx  context.Context
+	Repo r.Repository
 }
 
 func (h *Handlers) CreateCustomer(c *gin.Context) {
 	var customer models.Customer
+
 	if err := c.BindJSON(&customer); err != nil {
 		c.JSON(500, gin.H{
 			"message": "Failed to create customer",
@@ -25,11 +24,8 @@ func (h *Handlers) CreateCustomer(c *gin.Context) {
 		return
 	}
 
-	sqlStatement := `
-	 INSERT INTO customers(name)
-	 VALUES($1);
-	`
-	_, err := h.Conn.Exec(h.Ctx, sqlStatement, customer.Name)
+	err := h.Repo.CreateCustomer(customer)
+
 	if err != nil {
 		fmt.Printf("Failed to insert customer to DB: %v", err)
 		c.JSON(500, gin.H{
@@ -46,10 +42,7 @@ func (h *Handlers) CreateCustomer(c *gin.Context) {
 }
 
 func (h *Handlers) GetCustomers(c *gin.Context) {
-	sqlStatement := `
-		SELECT * FROM customers
-	`
-	rows, err := h.Conn.Query(h.Ctx, sqlStatement)
+	customers, err := h.Repo.GetCustomers()
 	if err != nil {
 		log.Printf("Failed to query DB: %v", err)
 		c.JSON(500, gin.H{
@@ -59,17 +52,6 @@ func (h *Handlers) GetCustomers(c *gin.Context) {
 		return
 	}
 
-	var customers []models.Customer
-
-	for rows.Next() {
-		var customer models.Customer
-		rows.Scan(
-			&customer.Id,
-			&customer.Name,
-			&customer.Code,
-		)
-		customers = append(customers, customer)
-	}
 	c.JSON(200, gin.H{
 		"customers": customers,
 	})

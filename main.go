@@ -6,6 +6,7 @@ import (
 
 	c "edwinwalela/ordering/config"
 	"edwinwalela/ordering/handlers"
+	repo "edwinwalela/ordering/repository"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
@@ -30,9 +31,14 @@ func main() {
 		log.Fatalf("Failed to connect to DB: %v", err)
 	}
 	log.Println("Connected to DB")
-	handlers := handlers.Handlers{
+
+	repo := repo.Repository{
 		Conn: conn,
 		Ctx:  ctx,
+	}
+
+	handlers := handlers.Handlers{
+		Repo: repo,
 	}
 
 	r.POST("/customers", handlers.CreateCustomer)
