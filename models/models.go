@@ -1,6 +1,7 @@
 package models
 
 type Customer struct {
+	Id   int64  `json:"id"`
 	Name string `json:"name"`
 	Code string `json:"code"`
 }
@@ -8,5 +9,5 @@ type Customer struct {
 type Order struct {
 	Item   string `json:"item"`
 	Amount int64  `json:"amount"`
-	Time   int64  `json:"time"`
+	Time   string `json:"time"`
 }

@@ -1,12 +1,20 @@
 package handlers
 
 import (
+	"context"
 	"edwinwalela/ordering/models"
+	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v4"
 )
 
-func CreateCustomer(c *gin.Context) {
+type Handlers struct {
+	Conn *pgx.Conn
+	Ctx  context.Context
+}
+
+func (h *Handlers) CreateCustomer(c *gin.Context) {
 	var customer models.Customer
 	if err := c.BindJSON(&customer); err != nil {
 		c.JSON(500, gin.H{
@@ -21,10 +29,37 @@ func CreateCustomer(c *gin.Context) {
 	})
 }
 
-func GetCustomer(c *gin.Context) {
+func (h *Handlers) GetCustomers(c *gin.Context) {
+	sqlStatement := `
+		SELECT * FROM customers
+	`
+	rows, err := h.Conn.Query(h.Ctx, sqlStatement)
+	if err != nil {
+		log.Printf("Failed to query DB: %v", err)
+		c.JSON(500, gin.H{
+			"message": "Error",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	var customers []models.Customer
+
+	for rows.Next() {
+		var customer models.Customer
+		rows.Scan(
+			&customer.Id,
+			&customer.Name,
+			&customer.Code,
+		)
+		customers = append(customers, customer)
+	}
+	c.JSON(200, gin.H{
+		"customers": customers,
+	})
 }
 
-func CreateOrder(c *gin.Context) {
+func (h *Handlers) CreateOrder(c *gin.Context) {
 	var order models.Order
 	if err := c.BindJSON(&order); err != nil {
 		c.JSON(500, gin.H{
@@ -39,6 +74,6 @@ func CreateOrder(c *gin.Context) {
 	})
 }
 
-func GetOrder(c *gin.Context) {
+func (h *Handlers) GetOrder(c *gin.Context) {
 
 }
