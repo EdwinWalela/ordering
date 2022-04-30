@@ -18,4 +18,5 @@ VALUES
 INSERT INTO orders (item,amount,customer_id)
 VALUES
 ('burger',500,1),
+('soda',100,1),
 ('chips',200,2);

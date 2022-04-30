@@ -34,7 +34,7 @@ func destroyDb(conn *pgx.Conn) error {
 func TestMain(m *testing.M) {
 	ctx := context.Background()
 	if err := godotenv.Load("../.env"); err != nil {
-		if os.Getenv("PG_URL_LOCAL") == "" {
+		if os.Getenv("DB_URL") == "" {
 			log.Fatalf("Failed to initalize repository: %v", err)
 		}
 	}
