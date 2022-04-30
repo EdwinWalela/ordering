@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Customer struct {
 	Id   int64  `json:"id"`
 	Name string `json:"name"`
@@ -7,8 +9,9 @@ type Customer struct {
 }
 
 type Order struct {
-	Item       string `json:"item"`
-	Amount     int64  `json:"amount"`
-	CustomerId int64  `json:"customer_id"`
-	Time       string `json:"time"`
+	Id         int64     `json:"id"`
+	Item       string    `json:"item"`
+	Amount     int64     `json:"amount"`
+	CustomerId int64     `json:"customer_id"`
+	Time       time.Time `json:"time"`
 }

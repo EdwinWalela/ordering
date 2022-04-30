@@ -109,6 +109,39 @@ func (h *Handlers) CreateOrder(c *gin.Context) {
 	})
 }
 
-func (h *Handlers) GetOrder(c *gin.Context) {
+func (h *Handlers) GetOrders(c *gin.Context) {
+	var orders []models.Order
+	sqlStatement := `
+		SELECT * FROM orders
+	`
+	rows, err := h.Conn.Query(h.Ctx, sqlStatement)
+	if err != nil {
+		log.Printf("Failed to query DB: %v", err)
+		c.JSON(500, gin.H{
+			"message": "Error",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	for rows.Next() {
+		var order models.Order
+
+		err := rows.Scan(
+			&order.Id,
+			&order.Item,
+			&order.Amount,
+			&order.CustomerId,
+			&order.Time,
+		)
+
+		log.Println(err)
+
+		orders = append(orders, order)
+	}
+
+	c.JSON(200, gin.H{
+		"orders": orders,
+	})
 
 }

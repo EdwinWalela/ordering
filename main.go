@@ -38,7 +38,7 @@ func main() {
 	r.POST("/customers", handlers.CreateCustomer)
 	r.POST("/orders", handlers.CreateOrder)
 	r.GET("/customers", handlers.GetCustomers)
-	r.GET("/orders", handlers.GetOrder)
+	r.GET("/orders", handlers.GetOrders)
 
 	r.Run(":" + cfg.Port)
 
