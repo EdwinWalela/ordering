@@ -143,5 +143,4 @@ func (h *Handlers) GetOrders(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"orders": orders,
 	})
-
 }
