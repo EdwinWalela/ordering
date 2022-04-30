@@ -29,10 +29,7 @@ func (h *Handlers) CreateCustomer(c *gin.Context) {
 	 INSERT INTO customers(name)
 	 VALUES($1);
 	`
-	cmd, err := h.Conn.Exec(h.Ctx, sqlStatement, customer.Name)
-
-	fmt.Println(cmd)
-
+	_, err := h.Conn.Exec(h.Ctx, sqlStatement, customer.Name)
 	if err != nil {
 		fmt.Printf("Failed to insert customer to DB: %v", err)
 		c.JSON(500, gin.H{
