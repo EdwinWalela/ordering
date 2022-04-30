@@ -1,0 +1,42 @@
+name: CI Tests
+
+on:
+  pull_request:
+    types: [opened, reopened]
+    
+env:
+  DB_DRIVER: postgres
+  PG_URL_LOCAL: postgres://postgres:postgres@localhost:5432/test?sslmode=disable
+  GRPC_PORT: 3001
+  HOST: localhost
+  HTTP_PORT: 3000
+  LOG_FILE_PATH: ./
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: test        
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@master
+        with:
+          ref: ${{ github.ref }}
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18
+      - name: Run tests
+        run: ./tests/test.sh
