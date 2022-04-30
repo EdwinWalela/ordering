@@ -5,12 +5,7 @@ on:
     types: [opened, reopened]
     
 env:
-  DB_DRIVER: postgres
-  PG_URL_LOCAL: postgres://postgres:postgres@localhost:5432/test?sslmode=disable
-  GRPC_PORT: 3001
-  HOST: localhost
-  HTTP_PORT: 3000
-  LOG_FILE_PATH: ./
+  DB_URL: postgres://postgres:postgres@localhost:5432/test?sslmode=disable
 jobs:
   build:
     runs-on: ubuntu-latest
