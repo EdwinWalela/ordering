@@ -4,6 +4,7 @@ import (
 	"log"
 
 	c "edwinwalela/ordering/config"
+	"edwinwalela/ordering/handlers"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -20,11 +21,10 @@ func main() {
 
 	r := gin.Default()
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	r.POST("/customers", handlers.CreateCustomer)
+	r.POST("/orders", handlers.CreateOrder)
+	r.GET("/customers", handlers.GetCustomer)
+	r.GET("/orders", handlers.GetOrder)
 
 	r.Run(":" + cfg.Port)
 
