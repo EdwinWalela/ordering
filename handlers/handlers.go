@@ -24,7 +24,7 @@ func (h *Handlers) CreateCustomer(c *gin.Context) {
 		return
 	}
 
-	err := h.Repo.CreateCustomer(customer)
+	id, err := h.Repo.CreateCustomer(customer)
 
 	if err != nil {
 		fmt.Printf("Failed to insert customer to DB: %v", err)
@@ -37,7 +37,7 @@ func (h *Handlers) CreateCustomer(c *gin.Context) {
 
 	c.JSON(201, gin.H{
 		"message":  "Customer created",
-		"customer": customer,
+		"customer": id,
 	})
 }
 
@@ -66,15 +66,7 @@ func (h *Handlers) CreateOrder(c *gin.Context) {
 		})
 		return
 	}
-
-	sqlStatement := `
-		INSERT INTO orders (item,amount,customer_id)
-		VALUES($1,$2,$3)
-		returning id;
-	`
-
-	var id int64
-	err := h.Conn.QueryRow(h.Ctx, sqlStatement, order.Item, order.Amount, order.CustomerId).Scan(&id)
+	orderId, err := h.Repo.CreateOrder(order)
 
 	if err != nil {
 		log.Printf("Failed to create order: %v", err)
@@ -87,39 +79,19 @@ func (h *Handlers) CreateOrder(c *gin.Context) {
 	// TODO: Send sms via AT
 	c.JSON(201, gin.H{
 		"message": "Order created",
-		"id":      id,
+		"id":      orderId,
 	})
 }
 
 func (h *Handlers) GetOrders(c *gin.Context) {
-	var orders []models.Order
-	sqlStatement := `
-		SELECT * FROM orders
-	`
-	rows, err := h.Conn.Query(h.Ctx, sqlStatement)
+	orders, err := h.Repo.GetOrders()
+
 	if err != nil {
-		log.Printf("Failed to query DB: %v", err)
 		c.JSON(500, gin.H{
-			"message": "Error",
+			"message": "Failed to create order",
 			"error":   err.Error(),
 		})
 		return
-	}
-
-	for rows.Next() {
-		var order models.Order
-
-		err := rows.Scan(
-			&order.Id,
-			&order.Item,
-			&order.Amount,
-			&order.CustomerId,
-			&order.Time,
-		)
-
-		log.Println(err)
-
-		orders = append(orders, order)
 	}
 
 	c.JSON(200, gin.H{

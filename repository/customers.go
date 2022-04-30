@@ -5,13 +5,19 @@ import (
 	"log"
 )
 
-func (r *Repository) CreateCustomer(customer models.Customer) error {
+func (r *Repository) CreateCustomer(customer models.Customer) (int64, error) {
 	sqlStatement := `
 	 INSERT INTO customers(name)
-	 VALUES($1);
+	 VALUES($1)
+	 returning id;
 	`
-	_, err := r.Conn.Exec(r.Ctx, sqlStatement, customer.Name)
-	return err
+	row := r.Conn.QueryRow(r.Ctx, sqlStatement, customer.Name)
+
+	var id int64
+
+	err := row.Scan(&id)
+
+	return id, err
 }
 
 func (r *Repository) GetCustomers() ([]models.Customer, error) {
