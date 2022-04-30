@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"edwinwalela/ordering/models"
+	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,24 @@ func (h *Handlers) CreateCustomer(c *gin.Context) {
 		})
 		return
 	}
+
+	sqlStatement := `
+	 INSERT INTO customers(name)
+	 VALUES($1);
+	`
+	cmd, err := h.Conn.Exec(h.Ctx, sqlStatement, customer.Name)
+
+	fmt.Println(cmd)
+
+	if err != nil {
+		fmt.Printf("Failed to insert customer to DB: %v", err)
+		c.JSON(500, gin.H{
+			"message": "Failed to create customer",
+			"error":   err.Error(),
+		})
+		return
+	}
+
 	c.JSON(201, gin.H{
 		"message":  "Customer created",
 		"customer": customer,
