@@ -2,7 +2,6 @@ package repository
 
 import (
 	"edwinwalela/ordering/models"
-	"log"
 )
 
 func (r *Repository) CreateOrder(order models.Order) (int64, error) {
@@ -31,16 +30,13 @@ func (r *Repository) GetOrders() ([]models.Order, error) {
 	for rows.Next() {
 		var order models.Order
 
-		err := rows.Scan(
+		rows.Scan(
 			&order.Id,
 			&order.Item,
 			&order.Amount,
 			&order.CustomerId,
 			&order.Time,
 		)
-
-		log.Println(err)
-
 		orders = append(orders, order)
 	}
 	return orders, nil
