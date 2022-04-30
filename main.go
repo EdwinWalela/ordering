@@ -21,15 +21,18 @@ func main() {
 
 	cfg := c.LoadConfig()
 	r := gin.Default()
+	ctx := context.Background()
 
-	conn, err := pgx.Connect(context.Background(), cfg.DbURl)
+	conn, err := pgx.Connect(ctx, cfg.DbURl)
+	defer conn.Close(ctx)
+
 	if err != nil {
 		log.Fatalf("Failed to connect to DB: %v", err)
 	}
 	log.Println("Connected to DB")
 	handlers := handlers.Handlers{
 		Conn: conn,
-		Ctx:  context.Background(),
+		Ctx:  ctx,
 	}
 
 	r.POST("/customers", handlers.CreateCustomer)

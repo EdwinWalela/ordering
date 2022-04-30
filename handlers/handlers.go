@@ -84,9 +84,28 @@ func (h *Handlers) CreateOrder(c *gin.Context) {
 		})
 		return
 	}
+
+	sqlStatement := `
+		INSERT INTO orders (item,amount,customer_id)
+		VALUES($1,$2,$3)
+		returning id;
+	`
+
+	var id int64
+	err := h.Conn.QueryRow(h.Ctx, sqlStatement, order.Item, order.Amount, order.CustomerId).Scan(&id)
+
+	if err != nil {
+		log.Printf("Failed to create order: %v", err)
+		c.JSON(500, gin.H{
+			"message": "Failed to create order",
+			"error":   err.Error(),
+		})
+		return
+	}
+	// TODO: Send sms via AT
 	c.JSON(201, gin.H{
 		"message": "Order created",
-		"order":   order,
+		"id":      id,
 	})
 }
 

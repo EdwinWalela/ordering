@@ -7,7 +7,8 @@ type Customer struct {
 }
 
 type Order struct {
-	Item   string `json:"item"`
-	Amount int64  `json:"amount"`
-	Time   string `json:"time"`
+	Item       string `json:"item"`
+	Amount     int64  `json:"amount"`
+	CustomerId int64  `json:"customer_id"`
+	Time       string `json:"time"`
 }
