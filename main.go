@@ -8,6 +8,7 @@ import (
 	"edwinwalela/ordering/handlers"
 	repo "edwinwalela/ordering/repository"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4"
 	"github.com/joho/godotenv"
@@ -49,6 +50,6 @@ func main() {
 	r.POST("/orders", handlers.CreateOrder)
 	r.GET("/customers", handlers.GetCustomers)
 	r.GET("/orders", handlers.GetOrders)
-
+	r.Use(cors.Default())
 	r.Run(":" + cfg.Port)
 }
