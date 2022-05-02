@@ -32,9 +32,12 @@ func main() {
 	}
 	log.Println("Connected to DB")
 
+	smsService := c.ATSMS{C: cfg}
+
 	repo := repo.Repository{
-		Conn: conn,
-		Ctx:  ctx,
+		Conn:       conn,
+		Ctx:        ctx,
+		SmsService: smsService,
 	}
 
 	handlers := handlers.Handlers{

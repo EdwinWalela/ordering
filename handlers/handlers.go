@@ -76,7 +76,9 @@ func (h *Handlers) CreateOrder(c *gin.Context) {
 		})
 		return
 	}
-	// TODO: Send sms via AT
+
+	h.Repo.SmsService.SendMessage("0706496885", "order test")
+
 	c.JSON(201, gin.H{
 		"message": "Order created",
 		"id":      orderId,
