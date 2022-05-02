@@ -5,7 +5,9 @@ Golang REST API
 ## Features
 
 - [ x ] Github Actions CI (unit tests) with branch protection
+
 - [ x ] Africa's Talking SMS gateway (message sent to customer when order is created)
+
 - [ x ] Gin router
 
 ## Run locally
