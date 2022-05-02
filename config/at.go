@@ -19,7 +19,6 @@ type ATSMS struct {
 }
 
 func (a *ATSMS) SendMessage(msg models.Message) error {
-
 	values := url.Values{
 		"username": {a.C.ATuser},
 		"to":       {msg.Recipient},

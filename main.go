@@ -14,7 +14,6 @@ import (
 )
 
 func main() {
-
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Failed to load .env file: %v", err)
@@ -50,5 +49,4 @@ func main() {
 	r.GET("/orders", handlers.GetOrders)
 
 	r.Run(":" + cfg.Port)
-
 }
