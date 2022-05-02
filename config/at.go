@@ -21,7 +21,7 @@ type ATSMS struct {
 func (a *ATSMS) SendMessage(msg models.Message) error {
 	values := url.Values{
 		"username": {a.C.ATuser},
-		"to":       {msg.Recipient},
+		"to":       {"0700000000"},
 		"message":  {fmt.Sprintf("Thank you %s for your order of %s. Our rider will contact you soon.", msg.Recipient, msg.Item)},
 	}
 	reader := strings.NewReader(values.Encode())
