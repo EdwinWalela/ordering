@@ -45,7 +45,7 @@ func main() {
 
 	r.GET("/oauth/verify", handlers.VerifyOauth)
 	r.POST("/oauth", handlers.RegisterCustomer)
-	r.POST("/customers", handlers.CreateCustomer)
+	// r.POST("/customers", handlers.CreateCustomer)
 	r.POST("/orders", handlers.CreateOrder)
 	r.GET("/customers", handlers.GetCustomers)
 	r.GET("/orders", handlers.GetOrders)
