@@ -1,13 +1,14 @@
 package config
 
 import (
-	"edwinwalela/ordering/models"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"edwinwalela/ordering/models"
 )
 
 const (
