@@ -1,6 +1,7 @@
 package config
 
 import (
+	"edwinwalela/ordering/models"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -17,11 +18,12 @@ type ATSMS struct {
 	C *Config
 }
 
-func (a *ATSMS) SendMessage(recipient string, msg string) error {
+func (a *ATSMS) SendMessage(msg models.Message) error {
+
 	values := url.Values{
 		"username": {a.C.ATuser},
-		"to":       {recipient},
-		"message":  {msg},
+		"to":       {msg.Recipient},
+		"message":  {fmt.Sprintf("Thank you %s for your order of %s. Our rider will contact you soon.", msg.Recipient, msg.Item)},
 	}
 	reader := strings.NewReader(values.Encode())
 
@@ -44,5 +46,6 @@ func (a *ATSMS) SendMessage(recipient string, msg string) error {
 	client := &http.Client{Timeout: 10 * time.Second}
 	res, err := client.Do(req)
 	fmt.Println(res)
+	fmt.Println(err)
 	return err
 }

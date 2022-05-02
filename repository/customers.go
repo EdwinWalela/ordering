@@ -20,6 +20,23 @@ func (r *Repository) CreateCustomer(customer models.Customer) (int64, error) {
 	return id, err
 }
 
+func (r *Repository) GetCustomerById(id int64) models.Customer {
+	sqlStatement := `
+	SELECT * FROM customers
+	WHERE id=$1
+`
+	rows := r.Conn.QueryRow(r.Ctx, sqlStatement, id)
+
+	var customer models.Customer
+	rows.Scan(
+		&customer.Id,
+		&customer.Name,
+		&customer.Code,
+	)
+
+	return customer
+}
+
 func (r *Repository) GetCustomers() ([]models.Customer, error) {
 	sqlStatement := `
 	SELECT * FROM customers

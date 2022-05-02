@@ -77,8 +77,15 @@ func (h *Handlers) CreateOrder(c *gin.Context) {
 		return
 	}
 
-	h.Repo.SmsService.SendMessage("0706496885", "order test")
+	customer := h.Repo.GetCustomerById(order.CustomerId)
 
+	message := models.Message{
+		Recipient: customer.Name,
+		Item:      order.Item,
+	}
+
+	err = h.Repo.SmsService.SendMessage(message)
+	fmt.Println(err)
 	c.JSON(201, gin.H{
 		"message": "Order created",
 		"id":      orderId,
