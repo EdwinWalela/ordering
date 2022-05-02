@@ -15,3 +15,8 @@ type Order struct {
 	CustomerId int64     `json:"customer_id"`
 	Time       time.Time `json:"time"`
 }
+
+type Message struct {
+	Recipient string
+	Item      string
+}

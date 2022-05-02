@@ -6,14 +6,20 @@ import (
 )
 
 type Config struct {
-	Port  string
-	DbURl string
+	Port   string
+	DbURl  string
+	ATKey  string
+	ATuser string
+	ATenv  string
 }
 
 func LoadConfig() *Config {
 	config := &Config{}
 	mustMapEnv(&config.Port, "PORT")
 	mustMapEnv(&config.DbURl, "DB_URL")
+	mustMapEnv(&config.ATKey, "AT_KEY")
+	mustMapEnv(&config.ATuser, "AT_USER")
+	mustMapEnv(&config.ATenv, "AT_ENV")
 	return config
 }
 

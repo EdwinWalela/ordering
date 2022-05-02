@@ -14,7 +14,6 @@ import (
 )
 
 func main() {
-
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalf("Failed to load .env file: %v", err)
@@ -32,20 +31,24 @@ func main() {
 	}
 	log.Println("Connected to DB")
 
+	smsService := c.ATSMS{C: cfg}
+
 	repo := repo.Repository{
-		Conn: conn,
-		Ctx:  ctx,
+		Conn:       conn,
+		Ctx:        ctx,
+		SmsService: smsService,
 	}
 
 	handlers := handlers.Handlers{
 		Repo: repo,
 	}
 
-	r.POST("/customers", handlers.CreateCustomer)
+	r.GET("/oauth/verify", handlers.VerifyOauth)
+	r.POST("/oauth", handlers.RegisterCustomer)
+	// r.POST("/customers", handlers.CreateCustomer)
 	r.POST("/orders", handlers.CreateOrder)
 	r.GET("/customers", handlers.GetCustomers)
 	r.GET("/orders", handlers.GetOrders)
 
 	r.Run(":" + cfg.Port)
-
 }
